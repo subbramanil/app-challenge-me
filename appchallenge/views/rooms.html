@@ -17,7 +17,7 @@
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/css/paint.css"/>
-<script type="text/javascript" src="/js/paint.js"></script>
+
 <script type="text/javascript">
 	
 var socket = io.connect('http://localhost:8080');
@@ -55,19 +55,20 @@ socket.on('error', function(error){
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-3">
 				<div class="row panel panel-primary">
 				 	<div class="panel-heading">
 				    	<h3 class="panel-title">Canvas</h3>
 				  	</div>
 				  	<div class="panel-body">
-				    	<canvas id="canvasBlock" width="600" height="400"
-							class="canvasStyle"></canvas>
+				    	<form>
+				    		
+				    	</form>
 				  	</div>
 				</div>
 				
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-9">
 				<div class="row panel panel-info">
 					<div class="panel-heading">
 				    	<h3 class="panel-title">Color Palette</h3>
@@ -82,50 +83,7 @@ socket.on('error', function(error){
 				  	</div>
 				</div>
 			</div>
-			<div class="col-md-2">
-				<div class="row panel panel-success">
-					<div class="panel-heading">
-				    	<h3 class="panel-title">Tool Palette</h3>
-				  	</div>
-				  	<div class="panel-body">
-						<div id="toolPalette">
-							<span class="toolSpan img-circle">Crayon</span> 
-							<span class="toolSpan img-circle">Marker</span> 
-							<span class="toolSpan img-rounded">Eraser</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-2">
-				<div class="row panel panel-danger">
-				 	<div class="panel-heading">
-				    	<h3 class="panel-title">People</h3>
-				  	</div>
-				  	<div class="panel-body">
-
-				    	<ul id="peopleList"></ul>
-				  	</div>
-				</div>
-			</div>
 		</div>
-
-		<div class="row">
-			<div class="col-md-6 panel panel-default">
-			 	<div class="panel-heading">
-			    	<h3 class="panel-title">Size</h3>
-			  	</div>
-			  	<div class="panel-body">
-			    	<div id="sizePallete" class="row">
-						<span class="sizeSpan" style="padding: 10px">small</span> 
-						<span class="sizeSpan" style="padding: 20px">normal</span> 
-						<span class="sizeSpan" style="padding: 30px">large</span> 
-						<span class="sizeSpan" style="padding: 40px">huge</span> 
-					</div>
-			  	</div>
-			</div>
-			<button id="clearBtn" class=" col-md-1 btn btn-lg btn-success">Clear</button>
-		</div>
-
 	</div>
 </body>
 </html>
