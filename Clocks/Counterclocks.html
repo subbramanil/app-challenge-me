@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>Clocks</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
+<style type="text/css">
+	.blocks{
+		margin: 10px;
+		border: none;
+	}
+</style>
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript">
+
+	var counterVal;
+
+	var upCounterID, downCounterID;
+
+	// flags to track clock running status
+	var c1Play = false, c2Play = false;
+	var isReadyToGo = false;
+
+	$(document).ready(function(){
+
+		$('#setTimer').click(setTimers);	
+		$('#clearTimer').click(clearTimers);	
+		
+		$('#playBtn1').click(startCountingUp);
+		$('#pauseBtn1').click(pauseCountingUp);
+		$('#resetBtn1').click(resetCountingUp);
+
+		$('#playBtn2').click(startCountingDown);
+		$('#pauseBtn2').click(pauseCountingDown);
+		$('#resetBtn2').click(resetCountingDown);
+
+	});
+
+</script>
+
+<body>
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				Stop Watches
+			</div>
+			<div class="panel-body">
+				<div class="panel panel-info col-md-3 col-md-offset-1 blocks">
+					<div class="panel-heading">
+						Set here
+					</div>
+					<div class="panel-body">
+						<div class="row blocks">
+					    	<input type="text" class="form-control" id="countVal" placeholder="Enter counter value eg., 60">
+					    </div>
+
+					    <div class="row blocks">
+					        	<button class="btn btn-primary" type="button" id="setTimer">Set</button>
+					     		<button class="btn btn-default" type="button" id="clearTimer">Clear</button>
+					    </div>
+					</div>
+				</div>
+				<div class="panel panel-success col-md-3 col-md-offset-1 blocks">
+					<div class="panel-heading">
+						Stop Watch 1
+					</div>
+					<div class="panel-body">
+						<h3>
+							<label id="cType1" class="label label-success">	
+							</label>
+						</h3>
+					</div>
+					<div class="panel-footer">
+						<div>
+							<button class="btn btn-success" type="button" id="playBtn1">
+				        		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+				        	</button>
+				        	<button class="btn btn-warning" type="button" id="pauseBtn1">
+			        			<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+			        		</button>
+			        		<button class="btn btn-info" type="button" id="resetBtn1">
+			        			<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+			        		</button>
+				      	</div>
+				      	<div class="label-warning" id="upCounterMsg">
+				      	</div>
+					</div>
+				</div>
+				<div class="panel panel-warning col-md-3 col-md-offset-1 blocks">
+					<div class="panel-heading">
+						Stop Watch 2
+					</div>
+					<div class="panel-body">
+						<h3>
+							<label id="cType2" class="label label-danger">
+								
+							</label>
+						</h3>
+					</div>
+					<div class="panel-footer">
+						<div>
+				        	<button class="btn btn-success" type="button" id="playBtn2">
+				        		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+				        	</button>
+				        	<button class="btn btn-warning" type="button" id="pauseBtn2">
+			        			<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+			        		</button>
+			        		<button class="btn btn-info" type="button" id="resetBtn2">
+			        			<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+			        		</button>
+				      	</div>
+				      	<div class="label-warning" id="downCounterMsg">
+				      	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
