@@ -39,6 +39,8 @@ function setTimers( )
     	countUp = 0;
     	countDown = countTarget;
     	isReadyToGo = true;
+    	c1Play = false;
+    	c2Play = false;
     }else{
     	alert("Pls enter valid number");
     	isReadyToGo = false;
@@ -63,6 +65,8 @@ function clearTimers(){
 	$('#cType2Secs').val(0);
 
 	$('#countVal').val("");	
+	$('#upCounterMsg').empty();
+	$('#downCounterMsg').empty();
 
 	// Clear timers
 	if(upCounterID != null)
