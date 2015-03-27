@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Home</title>
@@ -21,16 +22,18 @@
 <script type="text/javascript">
 	
 var socket = io.connect('http://localhost:8080');
+
+$(document).ready(function(){
+	socket.emit('getRoomDetails');
+});
+
 socket.on('connect', function() {
-  console.log('user connected');
-  var name = prompt("What's your name?");
-  console.log('Name:'+ name);
-  socket.emit('adduser', 'mani');
-  console.log('passed');
+  
 });
 socket.on('disconnect', function() {
   console.log('disconnected');
 });
+
 
 // $('form').submit(function(){
 //     var msg = $('#m').val();

@@ -1,53 +1,123 @@
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script>
 	var socket = io.connect('http://localhost:8080');
 
 	// on connection to server, ask for user's name with an anonymous callback
 	socket.on('connect', function(){
 		// call the server-side function 'adduser' and send one parameter (value of prompt)
-		socket.emit('adduser', prompt("What's your name?"));
+		console.log(socket.currentUser);
+		socket.emit('addUser', prompt("What's your name?"));
+
+		// Get all the available rooms
+		socket.emit('getAllRooms');
+
 	});
 
-	// listener, whenever the server emits 'updatechat', this updates the chat body
-	socket.on('updatechat', function (username, data) {
-		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+	socket.on('updateRooms', function(status, data){
+		if(status){
+			$('#roomsList').empty();
+			console.log(data);
+			var rooms = JSON.parse(data);
+			$.each(rooms, function(key, value){
+				$('#roomsList').append('<li><a href="/home/?key='+key+'"">' + value.roomName + '</a><span class="badge">'+value.count+'</span></li>');
+			});
+		}else{
+			$('#statusMsgsList').empty();
+			$('#statusMsgsList').append('<li> No rooms available <li>');
+		}
+	});
+
+	socket.on('statusUpdate', function(msg){
+		console.log("status updated");
+		$('#statusMsgsList').empty();
+		$('#statusMsgsList').append('<li>' + msg + '<li>');
 	});
 
 	// listener, whenever the server emits 'updateusers', this updates the username list
-	socket.on('updateusers', function(data) {
-		$('#users').empty();
-		$.each(data, function(key, value) {
-			$('#users').append('<div>' + key + '</div>');
-		});
+	socket.on('updateUsers', function(data) {
+		console.log("Updating Users");
+		$('#userInfo').empty();
+		var user = JSON.parse(data);
+		console.log(user);
+		$('#userInfo').append('<li>'+ user.username+'</li>')
+		$('#userInfo').append('<li>'+ user.userMailID+'</li>')
+		$('#userInfo').append('<li>'+ user.available+'</li>')
 	});
 
-	// on load of page
-	$(function(){
-		// when the client clicks SEND
-		$('#datasend').click( function() {
-			var message = $('#data').val();
-			$('#data').val('');
-			// tell server to execute 'sendchat' and send along one parameter
-			socket.emit('sendchat', message);
+	socket.on('addRoomSuccess', function(data){
+		console.log("Room created");
+		$('#roomsList').empty();
+
+		$.each(data, function(key, value){
+			$('#roomsList').append('<li><a href="/home/?key='+key+'"">' + value + '</a></li>');
 		});
 
-		// when the client hits ENTER on their keyboard
-		$('#data').keypress(function(e) {
-			if(e.which == 13) {
-				$(this).blur();
-				$('#datasend').focus().click();
-			}
+	});
+
+	$(document).ready(function(){
+		$('#addRoom').click(function(){
+			socket.emit('addRoom', prompt("Enter the room name:"));
 		});
 	});
 
 </script>
-<div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
-	<b>USERS</b>
-	<div id="users"></div>
-</div>
-<div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
-	<div id="conversation"></div>
-	<input id="data" style="width:200px;" />
-	<input type="button" id="datasend" value="send" />
-</div>
+<body>
+	<div class="container">
+		<div class="row"></div>
+			<div class="panel panel-primary col-md-5">
+				<div class="panel-heading">
+					User
+				</div>
+				<div class="panel-body">
+					<ul id="userInfo">
+
+					</ul>
+				</div>	
+			</div>
+			<div class="panel panel-primary col-md-5">
+				<div class="panel-heading">
+					Rooms
+				</div>
+				<div class="panel-body">
+					<ul id="roomsList">
+						
+					</ul>
+					<div>
+						<button class="btn btn-success" type="button" id="addRoom">
+			        		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			        	</button>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Messages
+				</div>
+				<div class="panel-body">
+					<ul id="statusMsgsList">
+						
+					</ul>
+				</div>	
+		</div>
+	</div>
+</body>
+</html>
