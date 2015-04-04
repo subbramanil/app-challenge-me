@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Call</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+	<style type="text/css">
+		video {
+		  width: 307px;
+		  height: 250px;
+		  background: rgba(255,255,255,0.5);
+		  border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div class="panel panel-primary col-md-6">
+		<div class="panel-heading">
+			Myself
+		</div>
+		<div class="panel-body">
+			<video id="myScreen" autoplay></video>
+		</div>
+		<div class="panel-footer">
+			<button class="btn btn-success" type="button" id="startBtn">
+        		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+        	</button>
+        	<button class="btn btn-success" type="button" id="callBtn">
+        		<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+        	</button>
+        	<button class="btn btn-danger" type="button" id="hangupBtn">
+        		<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+        	</button>
+		</div>
+	</div>
+	<div class="panel panel-primary col-md-6">
+		<div class="panel-heading">
+			Other Person
+		</div>
+		<div class="panel-body">
+			<video  id="remoteScreen" autoplay></video>
+		</div>
+		<div class="panel-footer">
+			<button class="btn btn-success" type="button" id="captureBtn">
+        		<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+        	</button>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src='lib/adapter.js'></script>
+	<script type="text/javascript">
+		var localStream, localPeerConnection, remotePeerConnection;
+		var localVideo = document.getElementById("myScreen");
+		var remoteVideo = document.getElementById("remoteScreen");
+
+		var startButton = document.getElementById("startBtn");
+		var callButton = document.getElementById("callBtn");
+		var hangupButton = document.getElementById("hangupBtn");
+		startButton.disabled = false;
+		callButton.disabled = true;
+		hangupButton.disabled = true;
+		startButton.onclick = start;
+		callButton.onclick = call;
+		hangupButton.onclick = hangup;
+
+		function trace(text) {
+		  console.log((performance.now() / 1000).toFixed(3) + ": " + text);
+		}
+
+		function gotStream(stream){
+		  trace("Received local stream");
+		  localVideo.src = URL.createObjectURL(stream);
+		  localStream = stream;
+		  callButton.disabled = false;
+		}
+
+		function start() {
+		  trace("Requesting local stream");
+		  startButton.disabled = true;
+		  // getUserMedia({audio:true, video:true}, gotStream,
+		  getUserMedia({video:true}, gotStream,
+		  	function(error) {
+		      trace("getUserMedia error: ", error);
+		    });
+		}
+
+		function call() {
+			callButton.disabled = true;
+			hangupButton.disabled = false;
+			trace("Starting call");
+
+			if (localStream.getVideoTracks().length > 0) {
+		    	trace('Using video device: ' + localStream.getVideoTracks()[0].label);
+		  	}
+		  	if (localStream.getAudioTracks().length > 0) {
+		    	trace('Using audio device: ' + localStream.getAudioTracks()[0].label);
+		  	}
+
+		  	var servers = null;
+
+		  	localPeerConnection = new RTCPeerConnection(servers);
+		  	trace("Created local peer connection object localPeerConnection");
+		  	localPeerConnection.onicecandidate = gotLocalIceCandidate;
+		  	console.log(localPeerConnection);
+
+		  	remotePeerConnection = new RTCPeerConnection(servers);
+		  	trace("Created remote peer connection object remotePeerConnection");
+		  	remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
+		  	remotePeerConnection.onaddstream = gotRemoteStream;
+		  	console.log(remotePeerConnection);
+
+		  	localPeerConnection.addStream(localStream);
+		  	trace("Added localStream to localPeerConnection");
+		  	localPeerConnection.createOffer(gotLocalDescription,handleError);
+		}
+
+		function gotLocalDescription(description){
+			console.log(description);
+			localPeerConnection.setLocalDescription(description);
+		  	trace("Offer from localPeerConnection: \n" + description.sdp);
+		  	remotePeerConnection.setRemoteDescription(description);
+		  	remotePeerConnection.createAnswer(gotRemoteDescription,handleError);
+		}
+
+		function gotRemoteDescription(description){
+			console.log(description);
+			remotePeerConnection.setLocalDescription(description);
+		  	trace("Answer from remotePeerConnection: \n" + description.sdp);
+		  	localPeerConnection.setRemoteDescription(description);
+		}
+
+		function hangup() {
+			trace("Ending call");
+		  	localPeerConnection.close();
+		  	remotePeerConnection.close();
+		  	localPeerConnection = null;
+		  	remotePeerConnection = null;
+		  	hangupButton.disabled = true;
+		  	callButton.disabled = false;
+		}
+
+		function gotRemoteStream(event){
+			remoteVideo.src = URL.createObjectURL(event.stream);
+		  	trace("Received remote stream");
+		}
+
+		function gotLocalIceCandidate(event){
+		  	if (event.candidate) {
+		    	remotePeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+		    	trace("Local ICE candidate: \n" + event.candidate.candidate);
+		  	}
+		}
+
+		function gotRemoteIceCandidate(event){
+			if (event.candidate) {
+		  		localPeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+		    	trace("Remote ICE candidate: \n " + event.candidate.candidate);
+		  	}
+		}
+
+		function handleError(){}
+
+	</script>
+
+</body>
+</html>

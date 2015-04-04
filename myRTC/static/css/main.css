@@ -1,0 +1,26 @@
+.blocks{
+	margin: 10px;
+	border: none;
+}
+
+video {
+  width: 307px;
+  height: 250px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid #ccc;
+}
+.grayscale {
+  +filter: grayscale(1);
+}
+.sepia {
+  +filter: sepia(1);
+}
+.blur {
+  +filter: blur(3px);
+}
+
+video {
+  filter: hue-rotate(180deg) saturate(200%);
+  -moz-filter: hue-rotate(180deg) saturate(200%);
+  -webkit-filter: hue-rotate(180deg) saturate(200%);
+}
