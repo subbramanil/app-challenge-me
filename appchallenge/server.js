@@ -7,9 +7,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var $ = require('jquery')(require("jsdom").jsdom().parentWindow);
 
-require('./router/main')(app);
-var dao = require('./userDao.js');
-
 // app.configure(function(){
     app.set('views',__dirname + '/views');
     app.set('view engine', 'ejs');
@@ -22,6 +19,11 @@ var dao = require('./userDao.js');
     // app.use(express.compress());
     app.use(express.static(__dirname + '/static',{maxAge: oneDay}));
 // });
+
+
+require('./router/main')(app);
+var dao = require('./userDao.js');
+var nsp = io.of('/appchallenge');
 
 var server = http.listen(8080,function(){
 	console.log("Server listening on port 8080");
@@ -40,7 +42,7 @@ function statusMsg(flag, msg, msgType){
 }
 
 
-io.on('connection', function(socket){
+nsp.on('connection', function(socket){
     console.log('user is connected at: '+ socket.id);
 
         var status;
@@ -73,6 +75,7 @@ io.on('connection', function(socket){
 
         socket.on('addRoom', function(roomData){
             console.log("server.addRoom() entry");
+            socket.join(roomData.roomName);
             var roomsList = dao.addRoom(roomData, socket.currentUser);
             socket.emit('updateRooms', true, JSON.stringify(roomsList));
             socket.broadcast.emit('updateRooms', true, JSON.stringify(roomsList));
@@ -95,11 +98,39 @@ io.on('connection', function(socket){
         socket.on('joinRoom', function(data){
             console.log("server.joinRoom() entry");
             console.log(data);
+            // var numClients = io.sockets.clients(room).length;
+            // console.log("No of Clients")
             var room = dao.joinRoom(data);
             console.log(room);
-            socket.emit("updateUserCount", JSON.stringify(room));
-            socket.broadcast.emit("updateUserCount", JSON.stringify(room));
+            if(room != null){
+                socket.join(room.roomName);    
+                socket.emit("updateRoomTable", JSON.stringify(room));
+                socket.broadcast.emit("updateRoomTable", JSON.stringify(room));
+                socket.emit('statusUpdate', "Joined room "+room.roomName)
+                socket.broadcast.to(room.roomName).emit('statusUpdate', data.user.userName+" has joined "+room.roomName)
+            }else{
+                // socket.broadcast.emit('statusUpdate', 'New User has connected');
+            }
             console.log("server.joinRoom() exit");
+        });
+
+        socket.on('leaveRoom', function(data){
+            console.log("server.leaveRoom() entry");
+            console.log(data);
+            // var numClients = io.sockets.clients(room).length;
+            // console.log("No of Clients")
+            var room = dao.leaveRoom(data);
+            console.log(room);
+            if(room != null){
+                socket.leave(room.roomName);    
+                socket.emit("updateRoomTable", JSON.stringify(room));
+                socket.broadcast.emit("updateRoomTable", JSON.stringify(room));
+                socket.emit('statusUpdate', "Left room "+room.roomName)
+                socket.broadcast.to(room.roomName).emit('statusUpdate', data.user.userName+" has left "+room.roomName)
+            }else{
+                // socket.broadcast.emit('statusUpdate', 'New User has connected');
+            }
+            console.log("server.leaveRoom() exit");
         });
 
         socket.on('disconnect', function(){

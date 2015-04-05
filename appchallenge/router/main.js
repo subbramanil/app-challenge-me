@@ -8,6 +8,10 @@ module.exports = function(app)
 	app.get('/index', function(req, res){
 		res.render('index.html');
 	});
+
+	app.get('/basic', function(req, res){
+		res.render('basic.html');
+	});
 	
 	app.get('/home/?', function(req, res){
 		//Render dynamic files
