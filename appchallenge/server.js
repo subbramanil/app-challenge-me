@@ -25,8 +25,8 @@ require('./router/main')(app);
 var dao = require('./userDao.js');
 var nsp = io.of('/appchallenge');
 
-var server = http.listen(8080,function(){
-	console.log("Server listening on port 8080");
+var server = http.listen(process.env.PORT || 8080,function(){
+	console.log("Server listening on port "+server.address().port);
 });
 
 var statusType = {
@@ -41,6 +41,16 @@ function statusMsg(flag, msg, msgType){
     this.msgType = msgType;
 }
 
+
+module.exports = {
+    getRoomDetails : function(data){
+        console.log("server.getRoomDetails() entry");
+        var room = dao.findRoom();
+        console.log(room);
+        console.log("server.getRoomDetails() exit");
+        return room;
+    }
+}
 
 nsp.on('connection', function(socket){
     console.log('user is connected at: '+ socket.id);
@@ -82,18 +92,6 @@ nsp.on('connection', function(socket){
             socket.emit('statusUpdate', roomData.roomName + ' has been created');
             console.log("server.addRoom() exit");
         });
-
-        // socket.on('getRoomDetails', function(){
-        //     console.log("getRoomDetails() entry");
-        //     $(roomsList).each(function(key, value) {
-        //         if(app.locals.roomID == key){
-        //             console.log($(roomsList).get(key));
-        //             var room = $(roomsList).get(key);
-        //             console.log(room);
-        //         }
-        //     });
-        //     console.log("getRoomDetails() exit");
-        // });
 
         socket.on('joinRoom', function(data){
             console.log("server.joinRoom() entry");

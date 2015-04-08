@@ -56,7 +56,7 @@ socket.on('updateRooms', function(status, data){
         			"mData": null,
                 	"orderable": false,
         			"mRender": function (obj) {
-        				return '<a class="btn btn-success" onclick="joinRoom('+obj.roomID+')">' + 'Join' + '</a>';
+        				return '<a class="btn btn-success" href="/rooms/'+obj.roomID+'" onclick="joinRoom('+obj.roomID+')">' + 'Join' + '</a>';
         			}
         		},
         		{   

@@ -98,6 +98,12 @@ module.exports = {
         }
         console.log("dao.leaveRoom() exit");
         return room;
-    }
+    },
+
+    // getRoomDetails : function(roomID){
+    //     console.log("dao.getRoomDetails() entry");
+    //     var room = this.findRoom(data);
+    //     console.log("dao.getRoomDetails() exit");
+    // }
 
 };

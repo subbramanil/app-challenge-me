@@ -1,3 +1,5 @@
+var dao = require('../server.js');
+
 module.exports = function(app)
 {
 	app.get('/',function(req,res){
@@ -22,7 +24,12 @@ module.exports = function(app)
 		//res.sendFile('./static/home.html');
 	});
 
-	app.get('/rooms', function(req, res){
+	app.get('/rooms/:roomID', function(req, res){
+		console.log(req.param.roomID);
+		var data = {"roomID":req.param.roomID};
+		var roomDetails = getRoomDetails(data)
+		console.log(roomDetails);
+		// app.locals.roomID = req.query.key;
 		res.render('rooms.html');
 	});
 }
