@@ -1,4 +1,5 @@
-var dao = require('../server.js');
+// var server = require('../server.js');
+var dao = require('../userDao.js');
 
 module.exports = function(app)
 {
@@ -25,9 +26,10 @@ module.exports = function(app)
 	});
 
 	app.get('/rooms/:roomID', function(req, res){
-		console.log(req.param.roomID);
-		var data = {"roomID":req.param.roomID};
-		var roomDetails = getRoomDetails(data)
+		var data = {"roomID":req.params.roomID};
+		console.log(data);
+		// var roomDetails = getRoomDetails(data)
+		var roomDetails = dao.findRoom(data);
 		console.log(roomDetails);
 		// app.locals.roomID = req.query.key;
 		res.render('rooms.html');

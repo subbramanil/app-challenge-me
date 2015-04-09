@@ -19,14 +19,8 @@ var sdpConstraints = {'mandatory': {
 
 /////////////////////////////////////////////
 
-var room = location.pathname.substring(1);
-console.log(location);
-if (room === '') {
-//  room = prompt('Enter room name:');
-  room = 'foo';
-} else {
-  //
-}
+// Just for testing.. Need a better approach
+var room  = location.pathname.substring(7);
 
 // var socket = io.connect();
 var socket = io.connect('http://localhost:8080/appchallenge');
@@ -39,17 +33,23 @@ if (room !== '') {
 // on connection to server, ask for user's name with an anonymous callback
 socket.on('connect', function(){
   console.log("get Room Details");
-  socket.emit('getRoomDetails');
+  socket.emit('getRoomDetails', {"roomID" : room});
 });
 
-socket.on('created', function (room){
-  console.log('Created room ' + room);
+socket.on('updateRoomDetails', function(data){
+  console.log("Updating Room details");
+  console.log(data);
   isInitiator = true;
 });
 
-socket.on('full', function (room){
-  console.log('Room ' + room + ' is full');
-});
+// socket.on('created', function (room){
+//   console.log('Created room ' + room);
+//   isInitiator = true;
+// });
+
+// socket.on('full', function (room){
+//   console.log('Room ' + room + ' is full');
+// });
 
 socket.on('join', function (room){
   console.log('Another peer made a request to join room ' + room);
