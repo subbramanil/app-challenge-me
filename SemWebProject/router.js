@@ -34,7 +34,7 @@ module.exports = function(app, cors)
 	});
 
 	app.get('/views/aboutUs', function(req, res){
-		console.log("Loading patients Page..");
+		console.log("Loading aboutUs Page..");
 		res.render('aboutUs.html');
 	});
 }
