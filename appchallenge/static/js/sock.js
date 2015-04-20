@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:8080/appchallenge');
+var socket = io.connect('http://52.10.61.232:8080/appchallenge');
 var user = null;
 
 function trace(text) {
