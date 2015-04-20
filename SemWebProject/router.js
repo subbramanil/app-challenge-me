@@ -1,17 +1,14 @@
-module.exports = function(app)
+module.exports = function(app, cors)
 {
+	var corsOptions = {
+  		origin: 'http://localhost:3030'
+	};	
 	app.get('/',function(req,res){
 		console.log('server is running');
 		res.redirect('/home');
 	});
 
-	app.use(function(req, res, next) {
-	  res.header("Access-Control-Allow-Origin", "*");
-	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	  next();
-	});
-
-	app.get('/home', function(req, res){
+	app.get('/home', cors(corsOptions), function(req, res){
 		console.log("Loading Home Page..");
 		res.render('index.html');
 	});
