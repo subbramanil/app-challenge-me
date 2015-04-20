@@ -1,6 +1,6 @@
 var adminApp = angular.module('adminApp', ['ngRoute']);
-//var serverURL = "http://localhost:3030/vethealth/query?query=";
-var serverURL = "http://52.10.61.232:3030/ds/query?query=";
+var serverURL = "http://localhost:3030/vethealth/query?query=";
+//var serverURL = "http://52.10.61.232:3030/ds/query?query=";
 
 adminApp.config(['$routeProvider',
     function ($routeProvider) {
@@ -20,6 +20,10 @@ adminApp.config(['$routeProvider',
             when('/Patients', {
                 templateUrl: '/views/patients',
                 controller: 'PatientController'
+            }).
+            when('/AboutUS', {
+                templateUrl: '/views/aboutUs',
+                controller: 'AboutUSController'
             }).
             otherwise({
                 redirectTo: '/Dashboard'

@@ -32,4 +32,9 @@ module.exports = function(app, cors)
 		console.log("Loading patients Page..");
 		res.render('patient.html');
 	});
+
+	app.get('/views/aboutUs', function(req, res){
+		console.log("Loading patients Page..");
+		res.render('aboutUs.html');
+	});
 }
