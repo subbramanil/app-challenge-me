@@ -1,3 +1,4 @@
+var dao = require('./userDao.js');
 module.exports = function(app, cors)
 {
 	var corsOptions = {
@@ -25,6 +26,7 @@ module.exports = function(app, cors)
 
 	app.get('/views/register', function(req, res){
 		console.log("Loading Register Page..");
+		dao.addUser();
 		res.render('register.html');
 	});
 
