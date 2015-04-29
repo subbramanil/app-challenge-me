@@ -19,10 +19,25 @@ module.exports = function(app, cors)
 		res.render('login.html');
 	});
 
-    /*app.get('/views/home', function(req, res){
-        console.log("Loading Home Page..");
-        res.render('home.html');
-    });*/
+    app.get('/views/test', function(req, res){
+        console.log("Loading test Page..");
+        res.render('call.html');
+    });
+
+	app.get('/views/callCtrl', function(req, res){
+		console.log("Loading Call control module..");
+		res.render('callCtrl.html');
+	});
+
+    app.get('/views/testLogin', function(req, res){
+        console.log("Loading test Page..");
+        res.render('testLogin.html');
+    });
+
+    app.get('/views/expert', function(req, res){
+        console.log("Loading expert Page..");
+        res.render('expertSettings.html');
+    });
 
 	app.get('/views/register', function(req, res){
 		console.log("Loading Register Page..");

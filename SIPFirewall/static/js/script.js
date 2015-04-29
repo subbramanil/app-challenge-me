@@ -15,6 +15,22 @@ sipApp.config(['$routeProvider',
                 templateUrl: '/views/register',
                 controller: 'LoginController'
             }).
+            when('/call', {
+                templateUrl: '/views/callCtrl',
+                controller: 'CallController'
+            }).
+            when('/test', {
+                templateUrl: '/views/test',
+                controller: 'LoginController'
+            }).
+            when('/testLogin', {
+                templateUrl: '/views/testLogin',
+                controller: 'LoginController'
+            }).
+            when('/expert', {
+                templateUrl: '/views/expert',
+                controller: 'SettingsController'
+            }).
             otherwise({
                 redirectTo: '/home'
             });
@@ -148,4 +164,10 @@ sipApp.controller('LoginController', ['$scope', '$http', function ($scope, $http
 }]);
 
 sipApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
+}]);
+
+sipApp.controller('CallController', ['$scope', '$http', function ($scope, $http) {
+}]);
+
+sipApp.controller('SettingsController', ['$scope', '$http', function ($scope, $http) {
 }]);
