@@ -245,3 +245,10 @@ function resetCountingDown(){
 	
 	console.log("resetCountingDown exit");
 }
+
+(function($) {
+	"use strict";
+	$("a.btn-progress").click(function(){
+		$('#bar-container').slideToggle();
+	});
+})(jQuery);

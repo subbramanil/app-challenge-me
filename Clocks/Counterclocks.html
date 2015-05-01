@@ -9,33 +9,6 @@
 		border: none;
 	}
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script type="text/javascript" src="script.js"></script>
-<script type="text/javascript">
-	var countTarget;
-	var upCounterID, downCounterID;
-
-	// flags to track clock running status
-	var c1Play = false, c2Play = false;
-	var isReadyToGo = false;
-
-	$(document).ready(function(){
-
-		$('#setTimer').click(setTimers);	
-		$('#clearTimer').click(clearTimers);	
-		
-		$('#playBtn1').click(startCountingUp);
-		$('#pauseBtn1').click(pauseCountingUp);
-		$('#resetBtn1').click(resetCountingUp);
-
-		$('#playBtn2').click(startCountingDown);
-		$('#pauseBtn2').click(pauseCountingDown);
-		$('#resetBtn2').click(resetCountingDown);
-
-	});
-
-</script>
-
 <body>
 	<!-- Main Panel -->
 	<div class="container">
@@ -148,6 +121,33 @@
 			</div>
 		</div>
 	</div>
-	<!-- End Main Panel -->
+    <!-- End Main Panel -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript">
+        var countTarget;
+        var upCounterID, downCounterID;
+
+        // flags to track clock running status
+        var c1Play = false, c2Play = false;
+        var isReadyToGo = false;
+
+        $(document).ready(function(){
+
+            $('#setTimer').click(setTimers);
+            $('#clearTimer').click(clearTimers);
+
+            $('#playBtn1').click(startCountingUp);
+            $('#pauseBtn1').click(pauseCountingUp);
+            $('#resetBtn1').click(resetCountingUp);
+
+            $('#playBtn2').click(startCountingDown);
+            $('#pauseBtn2').click(pauseCountingDown);
+            $('#resetBtn2').click(resetCountingDown);
+
+        });
+
+    </script>
+
 </body>
 </html>
