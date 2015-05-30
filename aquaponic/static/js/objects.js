@@ -8,6 +8,8 @@ function Rule(param, opr, value, action, emailID, phoneNumber){
     this.opr = opr;
     this.value = value;
     this.action = action;
+    this.flag = null;
+
     if(emailID)
         this.emailID = emailID;
     else

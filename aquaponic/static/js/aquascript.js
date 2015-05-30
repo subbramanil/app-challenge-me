@@ -17,28 +17,23 @@ aquaApp.config(['$routeProvider',
             }).
             when('/login', {
                 templateUrl : '../views/login.html',
-                controller : 'RulesController'
+                controller : 'LoginController'
             }).
             otherwise({
                 redirectTo: '/'
             });
-}]);
+    }]);
 
-
-//var rulesList = new Array();
 var rulesList = [{"rowID":1,"param":"Temperature","opr":"not equals","value":12,"action":"Send out a sms","emailID":"","phoneNumber":"2131221424"}];
-
-var selected=[];
+var updatedRules=[];
 var rulesTable;
-var selectedRule;
+var selRow;
 
 aquaApp.controller('DashboardController', ['$scope', '$http', function ($scope, $http) {
 }]);
 
-function test(obj){
-    console.log("test called");
-    console.log(obj);
-}
+aquaApp.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
+}]);
 
 aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $http) {
 
@@ -64,10 +59,15 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
     $scope.showRules = function () {
         console.log("aquaScript.showRules() entry");
 
-        if ( $.fn.DataTable.isDataTable( '#rulesDetails' ) ) {
+        if ( $.fn.dataTable.isDataTable( '#rulesDetails' ) ) {
             console.log("Deleting existing table");
             $("#rulesDetails").dataTable().fnDestroy();
         }
+
+        console.log("Table data");
+        $(rulesList).each(function(){
+            console.log(this);
+        });
 
         rulesTable = $('#rulesDetails').DataTable( {
             "data": rulesList,
@@ -107,57 +107,98 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
                     "sTitle": "",
                     "mData": null,
                     "orderable": false,
-                    "mRender": function (row) {
-                        var btn = '<button class="btn btn-success" onclick="test('+row+');" data-toggle="modal" data-target=".edit-rule-modal-lg">' + 'Edit' + '</button>';
+                    "mRender": function () {
+                        var btn = "<button class='btn btn-warning editBtn' data-toggle='modal' >" + "Edit" + "</button>";
+                        return btn;
+                    }
+                },
+                {
+                    "sTitle": "",
+                    "mData": null,
+                    "orderable": false,
+                    "mRender": function () {
+                        var btn = "<button class='btn btn-danger deleteBtn' data-toggle='modal' >" + "Delete" + "</button>";
                         return btn;
                     }
                 }
-            ],
-            "rowCallback": function( row, data ) {
-                console.log(data);
-                console.log(selected);
-                console.log($.inArray(data.rowID, selected));
-                if ( $.inArray(data.rowID, selected) !== -1 ) {
-                    $(row).toggleClass('selected');
-                    selected.push(data);
-                }
-            }
+            ]
         });
 
-        $('#rulesDetails tbody').on('click', 'tr', function () {
-            console.log("selected");
-            selectedRule = rulesTable.row(this).data();
-            var index = $.inArray(selectedRule.rowID, selected);
+        /**
+         * Edit Rule
+         */
+        $('#rulesDetails').on( 'click','tbody tr button.editBtn', function (e) {
+            console.log("Editing a rule");
+            $scope.selectedRule = new Rule();
+            selRow = $(this).closest('tr');
+            $scope.$apply(function () {
+                var rowData = rulesTable.row(selRow).data();
+                $scope.selectedRule = rowData;
+                console.log($scope.selectedRule);
+                $($scope.paramOptions).each(function(){
+                    if(this.name === rowData.param) {
+                        $scope.selectedRule.param = this;
+                        console.log($scope.selectedRule.param);
+                        return false;
+                    }
+                });
+                $($scope.operatorOptions).each(function(){
+                    if(this.name === rowData.opr) {
+                        $scope.selectedRule.opr = this;
+                        console.log($scope.selectedRule.opr);
+                        return false;
+                    }
+                });
 
-            if ( index === -1 ) {
-                selected.push(selectedRule.rowID);
-            } else {
-                selected.splice(index, 1);
-            }
+                $($scope.actionOptions).each(function(){
+                    if(this.name === rowData.action) {
+                        $scope.selectedRule.action = this;
+                        console.log($scope.selectedRule.action);
+                        return false;
+                    }
+                });
+                $scope.selectedRule.flag = 'E';
+                updatedRules.push($scope.selectedRule);
+            });
+            $('.edit-rule-modal-lg').modal();
+        });
 
-            console.log(selected);
-
-            $(this).toggleClass('selected');
-        } );
-
+        /**
+         * Delete Rule
+         */
+        $('#rulesDetails').on( 'click',' tbody tr button.deleteBtn', function (e) {
+            console.log("deleting a rule");
+            selRow = $(this).closest('tr');
+            var aData = rulesTable.row(selRow).data();
+            console.log(aData);
+            aData.flag = 'D';
+            updatedRules.push(aData);
+            $('.delete-rule-confirm-modal-lg').modal();
+            //rulesTable.row(selRow).remove().draw();
+        });
 
         console.log("aquaScript.showRules() exit");
     };
 
     $scope.showRules();
 
-    $scope.editRule = function(){
-        console.log("aquaScript.editRule() entry");
-        console.log(selectedRow);
-        console.log("aquaScript.editRule() exit");
-    };
+    $scope.deleteRule = function(){
+        console.log("aquaScript.deleteRule() entry");
+        //rulesTable.api().row.add(
+        ////rulesTable.rows.add(
+        //    [
+        //        newRule
+        //    ]
+        //).draw();
+        rulesTable.row(selRow).remove().draw();
+        console.log("aquaScript.deleteRule() exit");
+    }
 
     $scope.clear = function(){
         $scope.currentRule = new Rule();
     };
     $scope.addRule = function () {
         console.log("aquaScript.addRule() entry");
-        console.log("New Rule added");
         var newRule = new Rule(
             $scope.currentRule.param.name,
             $scope.currentRule.opr.name,
@@ -167,12 +208,43 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
             $scope.currentRule.phoneNumber
         );
         rulesList.push(newRule);
-        rulesTable.rows.add(
+        var result = rulesTable.rows.add(
             [
                 newRule
             ]
         ).draw();
+        console.log("New Rule added");
+        console.log(result);
         console.log("aquaScript.addRule() exit");
+    };
+
+    $scope.saveEditChanges = function(){
+        console.log("aquaScript.saveEditChanges() entry");
+        console.log($scope.selectedRule);
+
+        var updatedRule = new Rule(
+            $scope.selectedRule.param.name,
+            $scope.selectedRule.opr.name,
+            $scope.selectedRule.value,
+            $scope.selectedRule.action.name,
+            $scope.selectedRule.emailID,
+            $scope.selectedRule.phoneNumber
+        );
+
+        rulesTable.row( selRow )
+            .data( updatedRule)
+            .draw();
+
+        console.log("aquaScript.saveEditChanges() exit");
+    };
+
+    $scope.saveChanges = function(){
+        console.log("aquaScript.saveChanges() entry");
+        console.log(updatedRules);
+        $(updatedRules).each(function(){
+            console.log(this);
+        });
+        console.log("aquaScript.saveChanges() exit");
     };
 
 }]);
