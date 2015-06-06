@@ -19,6 +19,10 @@ aquaApp.config(['$routeProvider',
                 templateUrl : '../views/login.html',
                 controller : 'LoginController'
             }).
+            when('/history', {
+                templateUrl : '../views/history.html',
+                controller : 'LoginController'
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -28,8 +32,35 @@ var rulesList = [{"rowID":1,"param":"Temperature","opr":"not equals","value":12,
 var updatedRules=[];
 var rulesTable;
 var selRow;
+var tempData = [{"rowID":1,"sensorID":"1","temp":"32","lastUpdated":"06/05/2015 12:01 AM"},
+                {"rowID":2,"sensorID":"1","temp":"30","lastUpdated":"05/05/2015 11:56 PM"}];
 
 aquaApp.controller('DashboardController', ['$scope', '$http', function ($scope, $http) {
+    $scope.showTable = function(){
+        console.log();
+        rulesTable = $('#tempDetails').DataTable( {
+            "data": tempData,
+            "aaSorting": [],
+            "aoColumns": [
+                {
+                    "mData":"sensorID",
+                    "sTitle": "Sensor ID",
+                    "orderable": false
+                },
+                {
+                    "mData":"temp",
+                    "sTitle": "Temperature",
+                    "orderable": false
+                },
+                {
+                    "mData":"lastUpdated",
+                    "sTitle": "Last updated on",
+                    "orderable": false
+                }
+            ]
+        });
+    };
+    $scope.showTable();
 }]);
 
 aquaApp.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
@@ -59,10 +90,10 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
     $scope.showRules = function () {
         console.log("aquaScript.showRules() entry");
 
-        if ( $.fn.dataTable.isDataTable( '#rulesDetails' ) ) {
-            console.log("Deleting existing table");
-            $("#rulesDetails").dataTable().fnDestroy();
-        }
+        //if ( $.fn.dataTable.isDataTable( '#rulesDetails' ) ) {
+        //    console.log("Deleting existing table");
+        //    $("#rulesDetails").dataTable().fnDestroy();
+        //}
 
         console.log("Table data");
         $(rulesList).each(function(){
@@ -169,12 +200,15 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
         $('#rulesDetails').on( 'click',' tbody tr button.deleteBtn', function (e) {
             console.log("deleting a rule");
             selRow = $(this).closest('tr');
-            var aData = rulesTable.row(selRow).data();
-            console.log(aData);
-            aData.flag = 'D';
-            updatedRules.push(aData);
+            $scope.$apply(function () {
+                console.log(selRow);
+                $scope.selectedRule = rulesTable.row(selRow).data();
+                console.log($scope.selectedRule);
+                //console.log(rowData);
+                //rowData.flag = 'D';
+                //updatedRules.push(rowData);
+            });
             $('.delete-rule-confirm-modal-lg').modal();
-            //rulesTable.row(selRow).remove().draw();
         });
 
         console.log("aquaScript.showRules() exit");
@@ -184,12 +218,6 @@ aquaApp.controller('RulesController', ['$scope', '$http', function ($scope, $htt
 
     $scope.deleteRule = function(){
         console.log("aquaScript.deleteRule() entry");
-        //rulesTable.api().row.add(
-        ////rulesTable.rows.add(
-        //    [
-        //        newRule
-        //    ]
-        //).draw();
         rulesTable.row(selRow).remove().draw();
         console.log("aquaScript.deleteRule() exit");
     }

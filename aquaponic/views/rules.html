@@ -194,9 +194,12 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-inline">
-                            <h4> Do you want to delete the selected rules?</h4>
+                            <h4> Do you want to delete the selected rule?</h4>
                             <ul class="list-group">
-                                <!--todo list rules here -->
+                                <li class="list-group-item">
+                                    If {{selectedRule.param}} {{selectedRule.opr}} {{selectedRule.value}}
+                                    then {{selectedRule.action}} to {{selectedRule.emailID}} {{selectedRule.phoneNumber}}
+                                </li>
                             </ul>
                         </form>
                     </div>
