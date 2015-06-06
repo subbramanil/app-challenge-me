@@ -1,3 +1,5 @@
+var dao = require('./dao.js');
+
 module.exports = function(app, cors)
 {
 	var corsOptions = {
@@ -8,18 +10,33 @@ module.exports = function(app, cors)
 		res.redirect('/home');
 	});
 
-	app.get('/home', cors(corsOptions), function(req, res){
+	/*app.get('/home', cors(corsOptions), function(req, res){
 		console.log("Loading Home Page..");
 		res.render('index.html');
-	});
+	});*/
+
+    app.get('/home', function(req, res){
+        console.log("Loading Home Page..");
+        res.render('index.html');
+    });
 
 	app.get('/views/dashboard', function(req, res){
 		console.log("Loading Dashboard Page..");
+        dao.getAllSensors(function (err, data) {
+            if(err)
+                console.log("Error in DB access");
+            console.log(data);
+        });
+        dao.getTempData(function (err, data) {
+            if(err)
+                console.log("Error in DB access");
+            console.log(data);
+        });
 		res.render('dashboard.html');
 	});
 
 	app.get('/views/rules', function(req, res){
-		console.log("Loading surgery Page..");
+		console.log("Loading rules Page..");
 		res.render('rules.html');
 	});
 
