@@ -8,19 +8,19 @@ aquaApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
             when('/dashboard', {
-                templateUrl : '../views/dashboard.html',
+                templateUrl : '../views/dashboard',
                 controller : 'DashboardController'
             }).
             when('/rules', {
-                templateUrl : '../views/rules.html',
+                templateUrl : '../views/rules',
                 controller : 'RulesController'
             }).
             when('/login', {
-                templateUrl : '../views/login.html',
+                templateUrl : '../views/login',
                 controller : 'LoginController'
             }).
             when('/history', {
-                templateUrl : '../views/history.html',
+                templateUrl : '../views/history',
                 controller : 'LoginController'
             }).
             otherwise({
