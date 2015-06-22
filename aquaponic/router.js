@@ -50,4 +50,4 @@ module.exports = function(app, cors)
 		res.render('login.html');
 	});
 
-}
+};

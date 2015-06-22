@@ -11,6 +11,10 @@ app.use(express.static(__dirname + '/static',{maxAge: oneDay}));
 
 require('./router')(app, cors);
 
+var restRouter = express.Router();
+app.use('/api', restRouter);
+require('./rest')(restRouter, cors);
+
 var server = http.listen(process.env.PORT || 8080, function(){
 	console.log("Server is ready at port "+server.address().port);
 });

@@ -50,22 +50,6 @@ module.exports =
             });
         });
         console.log("dao.getSensorData() exit");
-    },
-
-    getTempData : function(callback){
-        console.log("dao.getTempData() entry");
-        pool.getConnection(function(err, con) {
-            if (err)
-                return callback(err);
-            con.query('SELECT * FROM temperature_data', function(err, rows, fields) {
-                console.log('Sensors available', rows);
-                con.release();
-                if (err)
-                    return callback(err);
-                callback(null, rows);
-            });
-        });
-        console.log("dao.getTempData() exit");
-    },
+    }
 
 };
