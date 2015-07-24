@@ -11,7 +11,17 @@ module.exports = function (app) {
 
     app.get("/home", function (req, res) {
         console.log();
-        res.render("index2.html");
+        res.render("index.html");
+    });
+
+    app.get("/app/partials/deviceDetails", function (req, res) {
+        console.log();
+        res.render("deviceDetails.html");
+    });
+
+    app.get("/app/partials/dashBoard", function (req, res) {
+        console.log();
+        res.render("dashBoard.html");
     });
 
 };
