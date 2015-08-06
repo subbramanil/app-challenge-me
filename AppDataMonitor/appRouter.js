@@ -10,18 +10,18 @@ module.exports = function (app) {
     });
 
     app.get("/home", function (req, res) {
-        console.log();
+        console.log("loading index page");
         res.render("index.html");
     });
 
     app.get("/app/partials/deviceDetails", function (req, res) {
-        console.log();
+        console.log("loading device details page");
         res.render("deviceDetails.html");
     });
 
     app.get("/app/partials/dashBoard", function (req, res) {
-        console.log();
-        res.render("dashBoard.html");
+        console.log("loading dashboard page");
+        res.render("dashboard.html");
     });
 
 };
