@@ -18,23 +18,22 @@ module.exports = function(app){
 		res.send(getStatus());
 	});
 
-	app.get("/setStatus/:cmd", function(req, res){
-		var cmd = req.params.cmd;
-		console.log("LED current Status: ", getStatus());
-		console.log("received command: ", cmd);
-		setStatus(cmd);
-		res.send("LED Status: "+getStatus());
+	app.get("/setStatus/:state", function(req, res){
+		var state = req.params.state;
+		console.log("received : ", state);
+		var result = toggleStatus(state);
+		res.send(getStatus());
 	});
 
         var getStatus = function(){
 		var status = led.readSync();
 	        console.log("raspController: led status: ", status);
-	        return (status === 0 ? "off" : "on");
+	        return (status === 0 ? false : true);
 	};
 
-        var setStatus = function(cmd){
-		console.log("raspController: received command: ", cmd);
-	        led.writeSync((cmd === "on")? 1 : 0);
-	        console.log("raspController: led status: ", led.readSync());
+        var toggleStatus = function(state){
+		console.log("raspController: led status before: ", state);
+	        led.writeSync((state !== 'false')? 1 : 0);
+	        console.log("raspController: led status after: ", led.readSync());
 	};
 };
