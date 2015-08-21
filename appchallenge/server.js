@@ -16,7 +16,7 @@ require('./router/main')(app);
 var dao = require('./userDao.js');
 var nsp = io.of('/appchallenge');
 
-var server = http.listen(process.env.PORT || 8080,function(){
+var server = http.listen(process.env.PORT || 8082,function(){
 	console.log("Server listening on port "+server.address().port);
 });
 

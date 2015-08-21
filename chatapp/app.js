@@ -8,8 +8,8 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname+'/index.html');
 });
 
-var server = http.listen(8080, function(){
-        console.log('server listening on port 8080');
+var server = http.listen(8083, function(){
+        console.log('server listening on port 8083');
 });
 
 var users = new Array();
