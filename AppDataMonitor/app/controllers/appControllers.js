@@ -3,6 +3,5 @@
  */
 
 (function (angular) {
-
     var module = angular.module("appControllers", ['firebase']);
 })(angular);

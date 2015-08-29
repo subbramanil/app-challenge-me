@@ -16,8 +16,8 @@
             function ($routeProvider) {
                 $routeProvider
                     .when("/", {
-                        templateUrl: "./app/partials/dashBoard",
-                        controller: "appInfoController"
+                        templateUrl: "./login",
+                        controller: "loginController"
                     })
                     .when('/deviceDetails', {
                         templateUrl: "/app/partials/deviceDetails"

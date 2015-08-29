@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%include style/header.ejs %>
+  </head>
+  <body class="<%=classname %>">
+    <div class="container">
+      <H1><%=pagetitle%><%=title%></H1>
+      <P><%=comment%></P>
+      <% if (typeof(users)!=='undefined') {%>
+      <ul>
+       <%  for(var i=0;i<users.length; i++){  %>
+            <li><%= JSON.stringify(users[i])%></li>
+        <% }%>
+      </ul>
+        <%}%>
+    </div>
+
+    <%include style/pagedefault.ejs %>
+
+ 
+    
+  </body>
+</html>

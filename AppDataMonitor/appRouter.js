@@ -6,10 +6,15 @@ module.exports = function (app) {
 
     app.get("/", function (req, res) {
         console.log("server is running successfully");
-        res.redirect("home");
+        res.redirect("login");
     });
 
     app.get("/home", function (req, res) {
+        console.log("loading index page");
+        res.render("index.html");
+    });
+
+    app.get("/login", function (req, res) {
         console.log("loading index page");
         res.render("index.html");
     });
