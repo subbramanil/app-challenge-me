@@ -4,7 +4,7 @@
      "version": "0.0.1",
      "dependencies": {
         "express": "~4.10.2",
-	"ejs": "~1.0.0",
+	"ejs": "~2.5.5",
         "socket.io": "1.2.0"
      }
 }
